@@ -71,7 +71,6 @@ def purchasePlaces():
         elif placesRequired > int(competition["numberOfPlaces"]):
             flash("Number of places unavailable !")
         else:
-            club["points"] = int(club["points"]) - placesRequired
             competition["numberOfPlaces"] = (
                 int(competition["numberOfPlaces"]) - placesRequired
             )
