@@ -1,4 +1,4 @@
-def test_use_more_points_than_available(client):
+def test_book_more_than_twelve_places(client):
     club = {"name": "Simply Lift", "email": "john@simplylift.co", "points": "13"}
 
     competition = {
@@ -7,15 +7,16 @@ def test_use_more_points_than_available(client):
         "numberOfPlaces": "25",
     }
 
-    data = {"places": 14, "club": club["name"], "competition": competition["name"]}
+    data = {"places": 13, "club": club["name"], "competition": competition["name"]}
 
     response = client.post("/purchasePlaces", data=data)
 
     message = response.data.decode()
     assert response.status_code == 400
-    assert "Insuficient points !" in message
+    assert "You cannot book more than 12 places !" in message
 
-def test_use_available_points(client):
+
+def test_book_less_than_twelve_places(client):
     club = {"name": "Simply Lift", "email": "john@simplylift.co", "points": "13"}
 
     competition = {
@@ -24,7 +25,7 @@ def test_use_available_points(client):
         "numberOfPlaces": "25",
     }
 
-    data = {"places": 3, "club": club["name"], "competition": competition["name"]}
+    data = {"places": 8, "club": club["name"], "competition": competition["name"]}
 
     response = client.post("/purchasePlaces", data=data)
 
