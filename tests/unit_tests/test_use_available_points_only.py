@@ -15,6 +15,7 @@ def test_use_more_points_than_available(client):
     assert response.status_code == 400
     assert "Insuficient points !" in message
 
+
 def test_use_available_points(client):
     club = {"name": "Simply Lift", "email": "john@simplylift.co", "points": "13"}
 
