@@ -1,5 +1,5 @@
 def test_use_more_points_than_available(client):
-    club = {"name": "Simply Lift", "email": "john@simplylift.co", "points": "13"}
+    club = {"name": "Simply Lift", "email": "john@simplylift.co", "points": "8"}
 
     competition = {
         "name": "Spring Festival",
@@ -7,7 +7,7 @@ def test_use_more_points_than_available(client):
         "numberOfPlaces": "25",
     }
 
-    data = {"places": 14, "club": club["name"], "competition": competition["name"]}
+    data = {"places": 9, "club": club["name"], "competition": competition["name"]}
 
     response = client.post("/purchasePlaces", data=data)
 
@@ -25,7 +25,7 @@ def test_use_available_points(client):
         "numberOfPlaces": "25",
     }
 
-    data = {"places": 3, "club": club["name"], "competition": competition["name"]}
+    data = {"places": 2, "club": club["name"], "competition": competition["name"]}
 
     response = client.post("/purchasePlaces", data=data)
 
