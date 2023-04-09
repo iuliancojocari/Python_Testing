@@ -1,4 +1,5 @@
 import json
+import datetime
 from flask import Flask, render_template, request, redirect, flash, url_for
 
 
@@ -59,30 +60,42 @@ def purchasePlaces():
         0
     ]
     club = [c for c in clubs if c["name"] == request.form["club"]][0]
+
+    date_now = datetime.datetime.now().replace(microsecond=0)
+    competition_date = datetime.datetime.strptime(
+        competition["date"], "%Y-%m-%d %H:%M:%S"
+    )
+
     try:
+
         placesRequired = int(request.form["places"])
 
         if placesRequired > int(competition["numberOfPlaces"]):
             flash("Number of places unavailable !")
-        elif int(club["points"]) < placesRequired:
-            flash("Insuficient points !")
-        elif placesRequired > 12:
+        
+        if placesRequired > 12:
             flash("You cannot book more than 12 places !")
-        elif placesRequired > int(competition["numberOfPlaces"]):
-            flash("Number of places unavailable !")
+
+        if placesRequired > int(club["points"]):
+            flash("Insuficient points !")
+
+        if competition_date < date_now:
+            flash("You cannot book places in a past competition.")
+
         else:
             competition["numberOfPlaces"] = (
-                int(competition["numberOfPlaces"]) - placesRequired
-            )
+                            int(competition["numberOfPlaces"]) - placesRequired
+                        )
             club["points"] = int(club["points"]) - placesRequired
             flash("Great-booking complete!")
-            return render_template("welcome.html", club=club, competitions=competitions)
-
-    except ValueError:
+            return render_template(
+                "welcome.html", club=club, competitions=competitions
+            )
+    
+    except ValueError: 
         flash("The field cannot be empty !")
 
     return render_template("booking.html", club=club, competition=competition), 400
-
 
 # TODO: Add route for points display
 
