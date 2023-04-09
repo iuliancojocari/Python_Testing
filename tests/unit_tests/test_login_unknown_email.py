@@ -32,3 +32,7 @@ class TestLogin:
         message = response.data.decode()
         assert response.status_code == 401
         assert "Email field cannot be empty" in message
+
+        message = response.data.decode()
+        assert response.status_code == 401
+        assert "Email field cannot be empty" in message
