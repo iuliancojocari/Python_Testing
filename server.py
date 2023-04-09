@@ -60,14 +60,27 @@ def purchasePlaces():
     ]
     club = [c for c in clubs if c["name"] == request.form["club"]][0]
 
-    placesRequired = int(request.form["places"])
-    competition["numberOfPlaces"] = int(competition["numberOfPlaces"]) - placesRequired
+    try:
+        placesRequired = int(request.form["places"])
 
-    if int(club["points"]) >= placesRequired:
-        flash("Great-booking complete!")
-        return render_template("welcome.html", club=club, competitions=competitions)
+        if placesRequired > int(competition["numberOfPlaces"]):
+            flash("Number of places unavailable !")
+        elif placesRequired > int(club["points"]):
+            flash("Insuficient points !")
+        elif placesRequired > 12:
+            flash("You cannot book more than 12 places !")
+        elif placesRequired > int(competition["numberOfPlaces"]):
+            flash("Number of places unavailable !")
+        else:
+            competition["numberOfPlaces"] = (
+                int(competition["numberOfPlaces"]) - placesRequired
+            )
+            flash("Great-booking complete!")
+            return render_template("welcome.html", club=club, competitions=competitions)
 
-    flash("Insuficient points !")
+    except ValueError:
+        flash("The field cannot be empty !")
+
     return render_template("booking.html", club=club, competition=competition), 400
 
 
