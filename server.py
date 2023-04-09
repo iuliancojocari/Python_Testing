@@ -71,11 +71,6 @@ def purchasePlaces():
     ]
     club = [c for c in clubs if c["name"] == request.form["club"]][0]
 
-    date_now = datetime.datetime.now().replace(microsecond=0)
-    competition_date = datetime.datetime.strptime(
-        competition["date"], "%Y-%m-%d %H:%M:%S"
-    )
-
     try:
         placesRequired = int(request.form["places"])
 
@@ -107,35 +102,3 @@ def purchasePlaces():
 @app.route("/logout")
 def logout():
     return redirect(url_for("index"))
-
-
-"""try:
-
-        placesRequired = int(request.form["places"])
-
-        if placesRequired > int(competition["numberOfPlaces"]):
-            flash("Number of places unavailable !")
-        
-        elif placesRequired > 12:
-            flash("You cannot book more than 12 places !")
-
-        elif placesRequired > int(club["points"]):
-            flash("Insuficient points !")
-
-        elif competition_date < date_now:
-            flash("You cannot book places in a past competition.")
-
-        else:
-            competition["numberOfPlaces"] = (
-                            int(competition["numberOfPlaces"]) - placesRequired
-                        )
-            club["points"] = int(club["points"]) - placesRequired
-            flash("Great-booking complete!")
-            return render_template(
-                "welcome.html", club=club, competitions=competitions
-            )
-    
-    except ValueError: 
-        flash("The field cannot be empty !")
-
-    return render_template("booking.html", club=club, competition=competition), 400"""
