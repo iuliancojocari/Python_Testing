@@ -59,6 +59,7 @@ def purchasePlaces():
         0
     ]
     club = [c for c in clubs if c["name"] == request.form["club"]][0]
+    
     try:
         placesRequired = int(request.form["places"])
 
