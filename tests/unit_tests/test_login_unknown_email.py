@@ -1,32 +1,38 @@
-def test_valid_email(client):
-    club = {"name": "Simply Lift", "email": "john@simplylift.co", "points": "13"}
+class TestLogin:
+    """
+    WHEN : A user types in an email not found in the system
+    THEN : App crashes
+    EXPECTED :Code should be written to ensure that if something goes
+                wrong (like the email isn't found), the error is caught
+                and handled. Display an error message like "Sorry, that
+                email wasn't found."
+    """
 
-    data = {"email": club["email"]}
+    def test_valid_email(self, client):
+        data = {"email": "john@simplylift.co"}
 
-    response = client.post("/showSummary", data=data)
+        response = client.post("/showSummary", data=data)
 
-    assert response.status_code == 200
+        assert response.status_code == 200
 
+    def test_invalid_email(self, client):
+        data = {"email": "invalid@email.com"}
 
-def test_invalid_email(client):
-    club = {"name": "Simply Lift", "email": "invalid@email.com", "points": "13"}
+        response = client.post("/showSummary", data=data)
 
-    data = {"email": club["email"]}
+        message = response.data.decode()
+        assert response.status_code == 401
+        assert "Sorry, that email was not found." in message
 
-    response = client.post("/showSummary", data=data)
+    def test_empty_email_field(self, client):
+        data = {"email": " "}
 
-    message = response.data.decode()
-    assert response.status_code == 401
-    assert "Sorry, that email was not found." in message
+        response = client.post("/showSummary", data=data)
 
+        message = response.data.decode()
+        assert response.status_code == 401
+        assert "Email field cannot be empty" in message
 
-def test_empty_email_field(client):
-    club = {"name": "Simply Lift", "email": "", "points": "13"}
-
-    data = {"email": club["email"]}
-
-    response = client.post("/showSummary", data=data)
-
-    message = response.data.decode()
-    assert response.status_code == 401
-    assert "Email field cannot be empty" in message
+        message = response.data.decode()
+        assert response.status_code == 401
+        assert "Email field cannot be empty" in message

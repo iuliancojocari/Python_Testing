@@ -33,7 +33,7 @@ def showSummary():
         club = [club for club in clubs if club["email"] == request.form["email"]][0]
         return render_template("welcome.html", club=club, competitions=competitions)
     except IndexError:
-        if request.form["email"] == "":
+        if request.form["email"] == " ":
             flash("Email field cannot be empty")
         else:
             flash("Sorry, that email was not found.")
@@ -45,13 +45,23 @@ def showSummary():
 def book(competition, club):
     foundClub = [c for c in clubs if c["name"] == club][0]
     foundCompetition = [c for c in competitions if c["name"] == competition][0]
-    if foundClub and foundCompetition:
-        return render_template(
-            "booking.html", club=foundClub, competition=foundCompetition
-        )
-    else:
-        flash("Something went wrong-please try again")
-        return render_template("welcome.html", club=club, competitions=competitions)
+
+    date_now = datetime.datetime.now().replace(microsecond=0)
+    competition_date = datetime.datetime.strptime(
+        foundCompetition["date"], "%Y-%m-%d %H:%M:%S"
+    )
+
+    if competition_date >= date_now:
+        if foundClub and foundCompetition:
+            return render_template(
+                "booking.html", club=foundClub, competition=foundCompetition
+            )
+        else:
+            flash("Something went wrong-please try again")
+            return render_template("welcome.html", club=club, competitions=competitions)
+
+    flash("You cannot book places in a past competition.")
+    return render_template("welcome.html", club=foundClub, competitions=competitions)
 
 
 @app.route("/purchasePlaces", methods=["POST"])
@@ -67,19 +77,52 @@ def purchasePlaces():
     )
 
     try:
+        placesRequired = int(request.form["places"])
+
+        if placesRequired > int(competition["numberOfPlaces"]):
+            flash("Number of places unavailable !")
+        elif int(club["points"]) < placesRequired:
+            flash("Insuficient points !")
+        elif placesRequired > 12:
+            flash("You cannot book more than 12 places !")
+        elif placesRequired > int(competition["numberOfPlaces"]):
+            flash("Number of places unavailable !")
+        else:
+            competition["numberOfPlaces"] = (
+                int(competition["numberOfPlaces"]) - placesRequired
+            )
+            club["points"] = int(club["points"]) - placesRequired
+            flash("Great-booking complete!")
+            return render_template("welcome.html", club=club, competitions=competitions)
+
+    except ValueError:
+        flash("The field cannot be empty !")
+
+    return render_template("booking.html", club=club, competition=competition), 400
+
+
+# TODO: Add route for points display
+
+
+@app.route("/logout")
+def logout():
+    return redirect(url_for("index"))
+
+
+"""try:
 
         placesRequired = int(request.form["places"])
 
         if placesRequired > int(competition["numberOfPlaces"]):
             flash("Number of places unavailable !")
         
-        if placesRequired > 12:
+        elif placesRequired > 12:
             flash("You cannot book more than 12 places !")
 
-        if placesRequired > int(club["points"]):
+        elif placesRequired > int(club["points"]):
             flash("Insuficient points !")
 
-        if competition_date < date_now:
+        elif competition_date < date_now:
             flash("You cannot book places in a past competition.")
 
         else:
@@ -95,11 +138,4 @@ def purchasePlaces():
     except ValueError: 
         flash("The field cannot be empty !")
 
-    return render_template("booking.html", club=club, competition=competition), 400
-
-# TODO: Add route for points display
-
-
-@app.route("/logout")
-def logout():
-    return redirect(url_for("index"))
+    return render_template("booking.html", club=club, competition=competition), 400"""
