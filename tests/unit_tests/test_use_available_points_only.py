@@ -1,5 +1,6 @@
 from server import clubs, competitions
 
+
 class TestUseAvailablePoints:
     """
     WHEN : A secretary redeems more points than they have available,
@@ -38,6 +39,7 @@ class TestUseAvailablePoints:
         response = client.post("/purchasePlaces", data=data)
 
         message = response.data.decode()
+        assert clubs[0]["points"] == 5
         assert response.status_code == 400
         assert "Insuficient points !" in message
 
