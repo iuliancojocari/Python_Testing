@@ -1,19 +1,5 @@
 from server import clubs, competitions
 
-
-class TestUseAvailablePoints:
-    """
-    WHEN : A secretary redeems more points than they have available,
-            which would leave them in the negative
-    THEN : They receive a confirmation message
-    EXPECTED :
-        - They should not be able to redeem more points than available;
-            this should be done within the UI.
-        - The redeemed points should be correctly deducted from the club's total.
-    """
-from server import clubs, competitions
-
-
 class TestUseAvailablePoints:
     """
     WHEN : A secretary redeems more points than they have available,
