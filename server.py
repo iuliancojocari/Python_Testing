@@ -32,7 +32,7 @@ def showSummary():
         club = [club for club in clubs if club["email"] == request.form["email"]][0]
         return render_template("welcome.html", club=club, competitions=competitions)
     except IndexError:
-        if request.form["email"] == "":
+        if request.form["email"] == " ":
             flash("Email field cannot be empty")
         else:
             flash("Sorry, that email was not found.")
@@ -59,7 +59,7 @@ def purchasePlaces():
         0
     ]
     club = [c for c in clubs if c["name"] == request.form["club"]][0]
-    
+
     try:
         placesRequired = int(request.form["places"])
 
