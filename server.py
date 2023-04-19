@@ -22,7 +22,7 @@ competitions = loadCompetitions()
 clubs = loadClubs()
 
 
-@app.route("/")
+@app.route("/login")
 def index():
     return render_template("index.html")
 
@@ -96,7 +96,7 @@ def purchasePlaces():
     return render_template("booking.html", club=club, competition=competition), 400
 
 
-@app.route('/points')
+@app.route('/')
 def view_club_points():
     club_list = sorted(clubs, key=lambda club: club['name'])
     return render_template('points.html', clubs=club_list)
